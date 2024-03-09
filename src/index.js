@@ -7,8 +7,10 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+
 import MainPage from 'pages/MainPage'
 import NotFound from 'pages/NotFound';
+import EditProducts from './components/Admin/EditProducts';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,7 @@ const router = createBrowserRouter([
     children: [
       {index: true, element: <MainPage/>},
       {path: '/main', element: <MainPage/>},
+      {path: '/admin', element: <EditProducts/>},
       // {path: 'videos/:keyword', element: <Videos/>},
       // {path: 'videos/watch/:videoId', element: <VideoDetail/>},
     ]

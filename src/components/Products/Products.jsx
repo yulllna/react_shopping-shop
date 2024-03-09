@@ -3,10 +3,12 @@ import ProductBox from './ProductBox';
 
 function products(props) {
     return (
-        <ul>
-            <li>
-                <ProductBox />
-            </li>
+        <ul className='flex gap-4'>
+            <ProductBox />
+            <ProductBox />
+            <ProductBox />
+            <ProductBox />
+            <ProductBox />
         </ul>
     );
 }
