@@ -54,9 +54,11 @@ function Header(props) {
                     <IoSearchSharp className='w-6 h-6' />
                     <input type="text" className='ml-1 border-b-2 focus:outline-0' placeholder='search' />
                 </li>
-                <li className='flex items-center mr-3'>
-                    <FaTshirt className='w-6 h-6' />
-                    <span className='ml-1'>products</span>
+                <li>
+                    <Link to='./products' className='flex items-center mr-3'>
+                        <FaTshirt className='w-6 h-6' />
+                        <span className='ml-1'>products</span>
+                    </Link>
                 </li>
                 {
                     user?.displayName === 'yul' && 
@@ -67,10 +69,14 @@ function Header(props) {
                     </Link>
                 </li>)
                 }
-                <li className='flex items-center mr-3'>
-                    <IoCartSharp className='w-6 h-6' />
-                    <span className='ml-1'>cart</span>
-                </li>
+                {
+                    user && (<li>
+                        <Link to='./cart' className='flex items-center mr-3'>
+                            <IoCartSharp className='w-6 h-6' />
+                            <span className='ml-1'>cart</span>
+                        </Link>
+                    </li>)
+                }
                 {
                     !user ? (
                     <li className='flex items-center mr-3' onClick={handleLogin}>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RiImageAddFill } from "react-icons/ri";
+// import { uploadToCloudinary } from '../../utils/cloudinary'
 
 const editList = [
     {
@@ -29,8 +30,9 @@ const editList = [
     },
 ]
 
-function EditProducts(props) {
+function EditProducts() {
     const [formData, setFormData] = useState(editList);
+    const [imageSrc, setImageSrc] = useState('');
 
     // input 값이 변경될 때 호출되는 핸들러 함수
     const handleChange = (code, value) => {
@@ -61,11 +63,13 @@ function EditProducts(props) {
         event.preventDefault();
         // 폼 데이터를 활용하여 원하는 작업 수행
         console.log('Form data submitted:', formData);
+        console.log(imageSrc)
         // 파이어 베이스 추가 + value삭제
-        // writeData()
+        // uploadToCloudinary(imageSrc).then((res) => {
+        //     console.log(res)
+        // });
+        
     };
-
-    const [imageSrc, setImageSrc] = useState('');
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];

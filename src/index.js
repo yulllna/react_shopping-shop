@@ -11,6 +11,10 @@ import {
 import MainPage from 'pages/MainPage'
 import NotFound from 'pages/NotFound';
 import EditProducts from './components/Admin/EditProducts';
+import ProductNew from './pages/ProductNew';
+import ProductDetail from './pages/ProductDetail';
+import CartPage from './pages/CartPage';
+import AllProducts from './pages/AllProducts';
 
 const router = createBrowserRouter([
   {
@@ -21,8 +25,10 @@ const router = createBrowserRouter([
       {index: true, element: <MainPage/>},
       {path: '/main', element: <MainPage/>},
       {path: '/admin', element: <EditProducts/>},
-      // {path: 'videos/:keyword', element: <Videos/>},
-      // {path: 'videos/watch/:videoId', element: <VideoDetail/>},
+      {path: '/products', element: <AllProducts/>},
+      {path: '/products/new', element: <ProductNew/>},
+      {path: '/products/:id', element: <ProductDetail/>},
+      {path: '/cart', element: <CartPage/>},
     ]
   },
 ]);
