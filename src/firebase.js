@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getDatabase, ref, get } from "firebase/database";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -13,33 +13,41 @@ const firebaseConfig = {
     measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 //export default app;
 export const db = getDatabase(app);
-
 export const auth = getAuth();
-
 const provider = new GoogleAuthProvider();
 
-export const handleSignInWithPopup = () => {
+export const login = () => {
     signInWithPopup(auth, provider)
-    .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-    }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+    .catch((error) => {
+        console.log(error)
+    });
+}
+
+export const logout = () => {
+    signOut(auth).then(() => null).catch((error) => {
+        console.log(error)
+      });
+}
+
+export function onUserStateChange(callback) {
+    onAuthStateChanged(auth, async (user) => {
+        user && adminUser(user)
+        const updatedUser = user ? await adminUser(user) : null;
+        callback(updatedUser)
+    })
+}
+
+async function adminUser(user) {
+    return get(ref(db, 'admins')).then((snapshot) => {
+        if(snapshot.exists()) {
+            const admins = snapshot.val();
+            const isAdmin = admins.includes(user.uid);
+            return {...user, isAdmin}
+        }
+        return user;
     });
 }

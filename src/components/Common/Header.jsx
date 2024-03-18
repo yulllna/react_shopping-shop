@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaStarOfLife } from "react-icons/fa";
 import { IoCartSharp } from "react-icons/io5";
@@ -6,13 +6,15 @@ import { FaTshirt } from "react-icons/fa";
 import { RiLoginBoxLine, RiLogoutBoxLine } from "react-icons/ri";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdManageAccounts } from "react-icons/md";
-import { login, auth, onUserStateChange } from '../../firebase';
-import { signOut } from 'firebase/auth';
+// import { login, onUserStateChange, logout } from '../../firebase';
 import Button from '../ui/Button'; // 버튼 컴포넌트 import
+import User from 'components/User';
+import { useAuthContext } from '../context/AuthContext'
 
 function Header(props) {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user, login, logout } = useAuthContext();
+  // const [user, setUser] = useState(null);
 
   const handleLogin = async () => {
     const data = await login();
@@ -20,19 +22,14 @@ function Header(props) {
   };
 
   const handleLogout = () => {
-    signOut(auth).then(() => {
-      // Sign-out successful.
-      navigate('/');
-    }).catch((error) => {
-      // An error happened.
-    });
+    logout()
   };
 
-  useEffect(() => {
-    onUserStateChange(user => {
-      setUser(user)
-    })
-  }, []);
+  // useEffect(() => {
+  //   onUserStateChange(user => {
+  //     setUser(user)
+  //   })
+  // }, []);
 
   return (
     <div className='flex flex-row items-center justify-between h-12 px-4'>
@@ -65,6 +62,9 @@ function Header(props) {
             text="cart"
             onClick={() => navigate('/cart')}
           />
+        }
+        {
+          user && <User user={user} />
         }
         {
           !user ? (
