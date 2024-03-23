@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { RiImageAddFill } from "react-icons/ri";
 // import { uploadToCloudinary } from '../../utils/cloudinary'
+import { uploadImage } from 'api/uploader';
+import { addNewProduct } from '../../firebase';
 
 const editList = [
     {
@@ -62,12 +64,16 @@ function EditProducts() {
     const handleSubmit = (event) => {
         event.preventDefault();
         // 폼 데이터를 활용하여 원하는 작업 수행
-        console.log('Form data submitted:', formData);
+        // console.log('Form data submitted:', formData);
         console.log(imageSrc)
         // 파이어 베이스 추가 + value삭제
         // uploadToCloudinary(imageSrc).then((res) => {
         //     console.log(res)
         // });
+        uploadImage(imageSrc).then(url => {
+            console.log(url)
+            addNewProduct(formData, url)
+        })
         
     };
 
@@ -75,14 +81,16 @@ function EditProducts() {
         const file = e.target.files[0];
 
         if (file) {
-        const reader = new FileReader();
+        // const reader = new FileReader();
 
-        reader.onloadend = () => {
-            // 이미지가 로드되면 상태를 업데이트하여 이미지를 표시
-            setImageSrc(reader.result);
-        };
+        // reader.onloadend = () => {
+        //     // 이미지가 로드되면 상태를 업데이트하여 이미지를 표시
+        //     setImageSrc(reader.result);
+        // };
 
-        reader.readAsDataURL(file); // 파일을 base64로 변환하여 읽음
+        // reader.readAsDataURL(file); // 파일을 base64로 변환하여 읽음
+        // const imageUrl = URL.createObjectURL(file);
+        setImageSrc(file);
         }
     };
 
@@ -91,7 +99,7 @@ function EditProducts() {
             <p className='pb-2 text-xl font-bold text-center'>새로운 제품 등록</p>
             <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center'>
                 <div className='relative mb-4 overflow-hidden h-52 w-44'>
-                    <input id='file' type="file" className='absolute w-full h-full' onChange={handleFileChange} />
+                    <input id='file' accept='image/*' type="file" name='file' className='absolute w-full h-full' onChange={handleFileChange} required />
                     <label htmlFor="file" className='absolute z-10 w-full h-full bg-gray-200'>
                         <div className='absolute z-10 left-1/2 top-1/2 transform translate-x-[-50%] translate-y-[-50%]'>
                             <RiImageAddFill className='w-8 h-8 mx-auto my-0 text-gray-400' />
@@ -101,7 +109,7 @@ function EditProducts() {
                     
                     {/* 이미지가 있을 경우 */}
                     {
-                        (imageSrc && imageSrc.trim() !== '') && <img src={imageSrc} alt="" className='absolute z-10 object-cover' />
+                        imageSrc && <img src={URL.createObjectURL(imageSrc)} alt="" className='absolute z-10 object-cover' />
                     }
                 </div>
                 {

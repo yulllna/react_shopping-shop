@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, set } from "firebase/database";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'firebase/auth';
+import { v4 as uuid } from "uuid";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -50,4 +51,18 @@ async function adminUser(user) {
         }
         return user;
     });
+}
+
+export async function addNewProduct (product, image) {
+    const id = uuid()
+    const params = {
+        id,
+        title: product.filter((item) => item.code === 'NAME')[0].data,
+        price: parseInt(product.filter((item) => item.code === 'PRICE')[0].data),
+        category: product.filter((item) => item.code === 'CATEGORY')[0].data,
+        description: product.filter((item) => item.code === 'DESCRIPTION')[0].data,
+        options: product.filter((item) => item.code === 'OPTIONS')[0].data.split(','),
+        image,
+    }
+    set(ref(db, `products/${id}`), params)
 }
