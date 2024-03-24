@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RiImageAddFill } from "react-icons/ri";
 import { uploadImage } from 'api/uploader';
 import { addNewProduct } from '../../firebase';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const editList = [
     {
@@ -37,10 +38,15 @@ function EditProducts() {
     const [isUploading, setIsUploading] = useState(false);
     const[success, setSuccess] = useState();
 
+    const queryClient = useQueryClient();
+    const addProduct = useMutation({
+        mutationFn: ({formData, url}) => addNewProduct(formData, url),
+        onSuccess: () => queryClient.invalidateQueries(['products'])
+    })
+
     // input 값이 변경될 때 호출되는 핸들러 함수
     const handleChange = (code, value) => {
         setFormData((prevData) => {
-          // Ensure that prevData is an array
           if (!Array.isArray(prevData)) {
             console.error("prevData is not an array");
             return prevData;
@@ -66,30 +72,20 @@ function EditProducts() {
         setIsUploading(true);
         uploadImage(imageSrc)
         .then(url => {
-            console.log(url)
-            addNewProduct(formData, url)
-            .then(() => {
-                setInitFormData()
-                setSuccess('성공적으로 제품이 추가되었습니다.');
-                setTimeout(() => {
-                    setSuccess(null)
-                }, 3000);
+            addProduct.mutate({formData, url}, 
+            {
+                onSuccess: () => {
+                    setSuccess('성공적으로 제품이 추가되었습니다.');
+                    setTimeout(() => {
+                        setSuccess(null)
+                    }, 3000);
+                }
             })
         })
         .finally(() => {
             setIsUploading(false)
         })
     };
-
-    const setInitFormData = () => {
-        setFormData(editList);
-        console.log(editList);
-        
-        const inputs = document.querySelectorAll('.form-input');
-        inputs.forEach(input => {
-        input.value = '';
-    });
-    }
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
