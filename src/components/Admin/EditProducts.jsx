@@ -82,7 +82,13 @@ function EditProducts() {
     };
 
     const setInitFormData = () => {
+        setFormData(editList);
+        console.log(editList);
         
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+        input.value = '';
+    });
     }
 
     const handleFileChange = (e) => {
@@ -96,7 +102,7 @@ function EditProducts() {
     return (
         <div className='p-4'>
             <p className='pb-2 text-xl font-bold text-center'>새로운 제품 등록</p>
-            {success && <p className='mt-4 text-center'>✅ {success}</p>}
+            {success && <p className='my-2 text-center'>✅ {success}</p>}
             <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center'>
                 <div className='relative mb-4 overflow-hidden h-52 w-44'>
                     <input id='file' accept='image/*' type="file" name='file' className='absolute w-full h-full' onChange={handleFileChange} required />
@@ -113,31 +119,17 @@ function EditProducts() {
                     }
                 </div>
                 {
-                    editList.map((item) => {
+                    editList.map((item, index) => {
                         return <input placeholder={item.title} type="text" id={item.code}
-                        name={item.code}
+                        name={item.code} key={index}
                         value={formData[item.code]} onChange={(e) => handleChange(item.code, e.target.value)}
-                        className="w-1/2 p-2 mt-1 mb-4 border rounded-md focus:outline-0" />
+                        className="w-1/2 p-2 mt-1 mb-4 border rounded-md focus:outline-0 form-input" />
                     })
                 }
                 <button type="submit" className="w-1/2 px-4 py-2 text-white bg-blue-500 rounded-md" disabled={isUploading}>{isUploading ? '업로드 중...' : '제품 등록하기'}</button>
             </form>
-            
         </div>
     );
 }
-
-// function writeData() {
-//     set(ref(db, 'users/' + userId), {
-//         username: name,
-//         email: email,
-//         profile_picture : imageUrl
-//     }).then(() => {
-//         setTodo("");
-//         alert('등록 완료')
-//     }).catch((error) => {
-//         return console.log(error)
-//     });
-// }
 
 export default EditProducts;

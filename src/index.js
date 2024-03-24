@@ -11,7 +11,6 @@ import {
 import MainPage from 'pages/MainPage'
 import NotFound from 'pages/NotFound';
 import EditProducts from './components/Admin/EditProducts';
-import ProductNew from './pages/ProductNew';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/CartPage';
 import AllProducts from './pages/AllProducts';
@@ -32,13 +31,7 @@ const router = createBrowserRouter([
         </ProtectedRoute>
       )},
       {path: '/products', element: <AllProducts/>},
-      {path: '/products/new', element: 
-      (
-        <ProtectedRoute requireAdmin>
-            <ProductNew/>
-        </ProtectedRoute>
-      )},
-      {path: '/products/:id', element: <ProductDetail/>},
+      {path: '/product/:id', element: <ProductDetail/>},
       {path: '/cart', element: 
         (
           <ProtectedRoute requireAdmin>
