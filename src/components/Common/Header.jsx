@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaStarOfLife } from "react-icons/fa";
-import { IoCartSharp } from "react-icons/io5";
 import { FaTshirt } from "react-icons/fa";
 import { RiLoginBoxLine, RiLogoutBoxLine } from "react-icons/ri";
 import { IoSearchSharp } from "react-icons/io5";
@@ -9,7 +8,8 @@ import { MdManageAccounts } from "react-icons/md";
 // import { login, onUserStateChange, logout } from '../../firebase';
 import Button from '../ui/Button'; // 버튼 컴포넌트 import
 import User from 'components/User';
-import { useAuthContext } from '../context/AuthContext'
+import { useAuthContext } from '../../context/AuthContext'
+import CartStatus from './CartStatus';
 
 function Header(props) {
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ function Header(props) {
         {
           user &&
           <Button
-            icon={<IoCartSharp className='w-6 h-6' />}
+            icon={<CartStatus/>}
             text="cart"
             onClick={() => navigate('/cart')}
           />

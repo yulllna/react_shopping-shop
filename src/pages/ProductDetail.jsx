@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuthContext } from 'context/AuthContext';
+import { addOrUpdateToCart } from '../firebase';
 
 function ProductDetail(props) {
+    const { uid } = useAuthContext();
     const {
         state: {
             product: {
-                image, title, description, category, options, price
+                id, image, title, description, category, options, price
             }
         },
     } = useLocation();
@@ -13,15 +16,18 @@ function ProductDetail(props) {
 
     const handleSelect = (e) => setSelected(e.target.value);
 
-    const handleClick = (e) => {
-        // 장바구니에 추가
+    const handleClick = () => {
+        const product = {
+            id, image, title, price, option: selected, quantity: 1
+        };
+        addOrUpdateToCart(uid, product)
     }
 
     return (
         <section>
             <p className='mx-12 mt-4 text-gray-700'>{category}</p>
             <section className='flex flex-col p-4 md:flex-row'>
-                <img src={image} alt={title} className="w-full px-4 basis-7/12" />
+                <img src={image} alt={title} className="w-[300px] px-4 basis-7/12" />
                 <div className='flex flex-col p-4 w-fulll basis-5/12'>
                     <h2 className='py-2 text-3xl font-bold'>{title}</h2>
                     <p className='py-2 text-2xl font-bold border-b border-gray-400'>₩{price}</p>
@@ -33,7 +39,7 @@ function ProductDetail(props) {
                             return <option key={index}>{option}</option>
                         })}</select>
                     </div>
-                    <button className='bg-[#5c4801] p-2 rounded-lg text-slate-800 text-white'>장바구니에 추가</button>
+                    <button className='bg-[#5c4801] p-2 rounded-lg text-white' onClick={handleClick}>장바구니에 추가</button>
                 </div>
             </section>
         </section>

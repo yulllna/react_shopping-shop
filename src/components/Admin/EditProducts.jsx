@@ -126,7 +126,7 @@ function EditProducts() {
                         className="w-1/2 p-2 mt-1 mb-4 border rounded-md focus:outline-0 form-input" />
                     })
                 }
-                <button type="submit" className="w-1/2 px-4 py-2 text-white bg-blue-500 rounded-md" disabled={isUploading}>{isUploading ? '업로드 중...' : '제품 등록하기'}</button>
+                <button type="submit" className="w-1/2 px-4 py-2 text-white rounded-md bg-brand" disabled={isUploading}>{isUploading ? '업로드 중...' : '제품 등록하기'}</button>
             </form>
         </div>
     );

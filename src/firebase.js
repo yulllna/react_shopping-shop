@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get, set } from "firebase/database";
+import { getDatabase, ref, get, set,remove } from "firebase/database";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'firebase/auth';
 import { v4 as uuid } from "uuid";
 
@@ -74,4 +74,22 @@ export async function getProducts() {
         }
         return [];
     });
+}
+
+export async function getCart(userId) {
+    return get(ref(db, `carts/${userId}`))
+    .then(snapshot => {
+        const items = snapshot.val() || {};
+        return Object.values(items);
+    })
+}
+
+export async function addOrUpdateToCart(userId, product) {
+    console.log(userId)
+    console.log(product)
+    return set(ref(db, `carts/${userId}/${product.id}`), product);
+}
+
+export async function removeFromCart(userId, product) {
+    return remove(ref(db, `carts/${userId}/${product.Id}`));
 }

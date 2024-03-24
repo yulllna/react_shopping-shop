@@ -3,7 +3,7 @@ import Header from 'components/Common/Header';
 import { Outlet } from 'react-router-dom';
 import './App.css';
 // import { auth } from './firebase';
-import { AuthContextProvider } from './components/context/AuthContext';
+import { AuthContextProvider } from './context/AuthContext';
 
 const queryClient = new QueryClient();
 
