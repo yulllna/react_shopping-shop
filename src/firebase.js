@@ -64,5 +64,5 @@ export async function addNewProduct (product, image) {
         options: product.filter((item) => item.code === 'OPTIONS')[0].data.split(','),
         image,
     }
-    set(ref(db, `products/${id}`), params)
+    return set(ref(db, `products/${id}`), params)
 }

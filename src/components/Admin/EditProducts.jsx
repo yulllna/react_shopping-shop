@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { RiImageAddFill } from "react-icons/ri";
-// import { uploadToCloudinary } from '../../utils/cloudinary'
 import { uploadImage } from 'api/uploader';
 import { addNewProduct } from '../../firebase';
 
@@ -35,6 +34,8 @@ const editList = [
 function EditProducts() {
     const [formData, setFormData] = useState(editList);
     const [imageSrc, setImageSrc] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
+    const[success, setSuccess] = useState();
 
     // input 값이 변경될 때 호출되는 핸들러 함수
     const handleChange = (code, value) => {
@@ -45,7 +46,6 @@ function EditProducts() {
             return prevData;
           }
       
-          // code 값을 가진 항목을 찾아서 data 항목의 value를 변경
           const updatedData = prevData.map((item) => {
             if (item.code === code) {
               return {
@@ -63,33 +63,32 @@ function EditProducts() {
     // 폼을 제출할 때 호출되는 핸들러 함수
     const handleSubmit = (event) => {
         event.preventDefault();
-        // 폼 데이터를 활용하여 원하는 작업 수행
-        // console.log('Form data submitted:', formData);
-        console.log(imageSrc)
-        // 파이어 베이스 추가 + value삭제
-        // uploadToCloudinary(imageSrc).then((res) => {
-        //     console.log(res)
-        // });
-        uploadImage(imageSrc).then(url => {
+        setIsUploading(true);
+        uploadImage(imageSrc)
+        .then(url => {
             console.log(url)
             addNewProduct(formData, url)
+            .then(() => {
+                setInitFormData()
+                setSuccess('성공적으로 제품이 추가되었습니다.');
+                setTimeout(() => {
+                    setSuccess(null)
+                }, 3000);
+            })
         })
-        
+        .finally(() => {
+            setIsUploading(false)
+        })
     };
+
+    const setInitFormData = () => {
+        
+    }
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
 
         if (file) {
-        // const reader = new FileReader();
-
-        // reader.onloadend = () => {
-        //     // 이미지가 로드되면 상태를 업데이트하여 이미지를 표시
-        //     setImageSrc(reader.result);
-        // };
-
-        // reader.readAsDataURL(file); // 파일을 base64로 변환하여 읽음
-        // const imageUrl = URL.createObjectURL(file);
         setImageSrc(file);
         }
     };
@@ -97,6 +96,7 @@ function EditProducts() {
     return (
         <div className='p-4'>
             <p className='pb-2 text-xl font-bold text-center'>새로운 제품 등록</p>
+            {success && <p className='mt-4 text-center'>✅ {success}</p>}
             <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center'>
                 <div className='relative mb-4 overflow-hidden h-52 w-44'>
                     <input id='file' accept='image/*' type="file" name='file' className='absolute w-full h-full' onChange={handleFileChange} required />
@@ -109,7 +109,7 @@ function EditProducts() {
                     
                     {/* 이미지가 있을 경우 */}
                     {
-                        imageSrc && <img src={URL.createObjectURL(imageSrc)} alt="" className='absolute z-10 object-cover' />
+                        imageSrc && <img src={URL.createObjectURL(imageSrc)} alt="" className='absolute z-10 object-cover w-full h-full' />
                     }
                 </div>
                 {
@@ -120,7 +120,7 @@ function EditProducts() {
                         className="w-1/2 p-2 mt-1 mb-4 border rounded-md focus:outline-0" />
                     })
                 }
-                <button type="submit" className="w-1/2 px-4 py-2 text-white bg-blue-500 rounded-md">저장</button>
+                <button type="submit" className="w-1/2 px-4 py-2 text-white bg-blue-500 rounded-md" disabled={isUploading}>{isUploading ? '업로드 중...' : '제품 등록하기'}</button>
             </form>
             
         </div>
