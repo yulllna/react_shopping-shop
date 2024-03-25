@@ -1,18 +1,22 @@
 import React from 'react';
 import ProductBox from './ProductBox';
-import {getProducts} from '../../firebase'
-import { useQuery } from '@tanstack/react-query';
+// import {getProducts} from '../../firebase'
+// import { useQuery } from '@tanstack/react-query';
+import useProducts from '../../hooks/useProducts';
 
 
 function Products(props) {
-    const {
-        isLoading, 
-        error, 
-        data: products
-    } = useQuery({ 
-        queryKey: ['products'], 
-        queryFn: getProducts 
-    })
+    // const {
+    //     isLoading, 
+    //     error, 
+    //     data: products
+    // } = useQuery({ 
+    //     queryKey: ['products'], 
+    //     queryFn: getProducts 
+    // })
+
+    const {productsQuery: { isLoading, error, data: products}} = useProducts();
+    console.log(products)
     
     // getProducts().then((res) => {
     //     console.log(res)

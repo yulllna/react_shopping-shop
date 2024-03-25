@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { RiImageAddFill } from "react-icons/ri";
 import { uploadImage } from 'api/uploader';
-import { addNewProduct } from '../../firebase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+// import { addNewProduct } from '../../firebase';
+// import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useProducts from '../../hooks/useProducts';
 
 const editList = [
     {
@@ -37,12 +38,13 @@ function EditProducts() {
     const [imageSrc, setImageSrc] = useState('');
     const [isUploading, setIsUploading] = useState(false);
     const[success, setSuccess] = useState();
+    const { addProduct } = useProducts();
 
-    const queryClient = useQueryClient();
-    const addProduct = useMutation({
-        mutationFn: ({formData, url}) => addNewProduct(formData, url),
-        onSuccess: () => queryClient.invalidateQueries(['products'])
-    })
+    // const queryClient = useQueryClient();
+    // const addProduct = useMutation({
+    //     mutationFn: ({formData, url}) => addNewProduct(formData, url),
+    //     onSuccess: () => queryClient.invalidateQueries(['products'])
+    // })
 
     // input 값이 변경될 때 호출되는 핸들러 함수
     const handleChange = (code, value) => {

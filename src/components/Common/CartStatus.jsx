@@ -1,19 +1,20 @@
 import React from 'react';
-import { IoCartSharp } from "react-icons/io5";
-import { useQuery } from '@tanstack/react-query';
-import { getCart } from '../../firebase';
-import { useAuthContext } from 'context/AuthContext';
+import { AiOutlineShoppingCart } from 'react-icons/ai';
+import useCart from '../../hooks/useCart';
 
-function CartStatus(props) {
-    const { uid } = useAuthContext();
-    const {data: products} = useQuery({queryKey: ['products'], queryFn: () => getCart(uid) });
+export default function CartStatus() {
+  const {
+    cartQuery: { data: products },
+  } = useCart();
 
-    return (
-        <div className='relative'>
-            <IoCartSharp className='text-4xl' />
-            {products && <p className='absolute w-5 h-5 font-bold text-center text-white border-white rounded-full outline bg-brand -top-1 -right-2'>{products.length}</p>}
-        </div>
-    );
+  return (
+    <div className='relative'>
+      <AiOutlineShoppingCart className='text-4xl' />
+      {products && (
+        <p className='absolute w-6 h-6 font-bold text-center text-white rounded-full bg-brand -top-1 -right-2'>
+          {products.reduce((prev, current) => prev + current.quantity, 0)}
+        </p>
+      )}
+    </div>
+  );
 }
-
-export default CartStatus;
